@@ -4,13 +4,17 @@
 
 Built for Suyash's project portfolio. The app works locally and includes a Cloudflare Workers deployment with persistent SQLite storage. The configured ElevenLabs agent and authenticated connection endpoint have been verified; an end-to-end microphone session still needs testing.
 
+## Try the app
+
+[**Open One More**](https://one-more.one-more.workers.dev) · Enter the project password supplied with the application. The hosted version is a shared demonstration journal with persistent storage and labeled sample history.
+
 ## Watch the demo
 
 [**Watch the 70-second walkthrough**](https://suyashbwj.github.io/one-more/) · [Download MP4](docs/demo/one-more-demo.mp4) · [Verification notes](docs/verification.md)
 
 [![One More product walkthrough](docs/demo/poster.jpg)](https://suyashbwj.github.io/one-more/)
 
-The public page hosts a captioned demo, not a shared live workout database. It uses actual app captures and demonstration data. Run the full app locally with the instructions below.
+The walkthrough uses actual app captures and demonstration data. The working app is hosted separately on Cloudflare at the link above. You can also run it locally with the instructions below.
 
 ## Run locally
 

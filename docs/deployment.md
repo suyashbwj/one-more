@@ -2,7 +2,7 @@
 
 ## Current status
 
-The GitHub Pages walkthrough is public. The working app's Cloudflare deployment is prepared and locally verified, but requires Cloudflare sign-in before publication. Do not use the walkthrough URL as evidence that the backend is deployed.
+The working app is live at **https://one-more.one-more.workers.dev** on Cloudflare, with a password gate and persistent SQLite storage. The project password is shared privately with reviewers. The GitHub Pages walkthrough is also public.
 
 Cloudflare Workers Free supports SQLite-backed Durable Objects. The app shares its existing workout store and command parser between Node and Cloudflare; it does not maintain a separate set of workout rules. Cloudflare uses `transactionSync` for atomic mutations and request replay storage. Node uses SQLite transactions. No personal local database is uploaded.
 
@@ -26,7 +26,7 @@ Voice is optional. The provider enforces the configured 60-second session durati
 
 Create a gitignored `.dev.vars` containing `APP_PASSWORD=local-worker-test-password`, then run `npm run dev:cloudflare`. It uses a separate local SQLite database under `.wrangler`; production data is unaffected. The Node app continues to use `data/one-more.sqlite`.
 
-Verified September 14, 2026 against the local Workers runtime: unauthenticated denial, invalid password denial, secure cookie issuance, authenticated state access, set persistence, idempotent replay, stale-edit conflict, workout completion, cross-origin denial, and oversized-body denial. Twenty Node tests and both TypeScript builds pass. A real microphone conversation and the final public hosting checks remain pending.
+Verified September 14, 2026 against the local Workers runtime: unauthenticated denial, invalid password denial, secure cookie issuance, authenticated state access, set persistence, idempotent replay, stale-edit conflict, workout completion, cross-origin denial, and oversized-body denial. Twenty Node tests and both TypeScript builds pass. The live HTTPS deployment also passed login, unauthorized API denial, mutation persistence, exact-retry handling, stale-edit rejection, and cleanup checks. Five labeled sample workouts are available. A real microphone conversation remains pending. Hosted voice is currently disabled pending authorization to transfer the provider credentials.
 
 ## Optional Node hosting
 
