@@ -1,0 +1,42 @@
+[
+  {
+    "start": 5,
+    "title": "Built for the next set.",
+    "caption": "Choose a workout and start a session. The same journal works on desktop and phone."
+  },
+  {
+    "start": 12,
+    "title": "Two sets. Both saved.",
+    "caption": "Record weight and reps. Identical intentional sets stay separate; request replays cannot duplicate a write."
+  },
+  {
+    "start": 20,
+    "title": "Correct it in plain text.",
+    "caption": "\u201cChange set 2 to 7 reps.\u201d The parser proposes the exact change and waits for confirmation."
+  },
+  {
+    "start": 28,
+    "title": "A correction you can trust.",
+    "caption": "Set 2 now shows 7 reps. Version checks protect against stale edits, and the previous values remain in the audit log."
+  },
+  {
+    "start": 36,
+    "title": "Keep the context.",
+    "caption": "Save setup notes alongside the numbers. Browser drafts survive reloads; saved notes live in SQLite."
+  },
+  {
+    "start": 43,
+    "title": "Find the session again.",
+    "caption": "Search by workout, exercise, or saved notes. This search finds the narrower-grip note and the corrected sets."
+  },
+  {
+    "start": 50,
+    "title": "Follow each movement.",
+    "caption": "Switch between heaviest set, total volume, and reps. Sample workouts are included explicitly for this demo."
+  },
+  {
+    "start": 57,
+    "title": "A journal that fits.",
+    "caption": "The responsive phone layout keeps the same history and measurements. This is a browser viewport demonstration."
+  }
+]
