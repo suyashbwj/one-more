@@ -20,7 +20,7 @@ The tool only PREPARES a change; it does not save. Read its returned message to 
 For history questions, answer using get_workout_context. It includes up to three recent completed sessions. State when information is unavailable. To delete sets or finish workouts, direct the user to the on-screen controls.
 ```
 
-First message: `Ready for one more? Tell me your exercise, weight, and reps.`
+First message: `I'm One More, your AI workout logger. Tell me your exercise, weight, and reps.`
 
 ## Register three client tools
 

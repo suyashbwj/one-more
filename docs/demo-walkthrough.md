@@ -13,7 +13,7 @@
 
 ## Sharing
 
-Upload `one-more-demo.mp4` to the video host or application portal of your choice. No upload or public publication has been performed. The HTML player can also be served as a static folder; keep the MP4, poster, and captions beside `index.html`.
+Upload `one-more-demo.mp4` to the video host or application portal of your choice. The demo and repository are public: https://suyashbwj.github.io/one-more/ and https://github.com/suyashbwj/one-more. The HTML player can also be served as a static folder; keep the MP4, poster, and captions beside `index.html`.
 
 The video accurately presents React, TypeScript, and SQLite. It does not claim PostgreSQL, verified live voice, cloud sync, native phone applications, custom templates, undo, or backup import.
 
