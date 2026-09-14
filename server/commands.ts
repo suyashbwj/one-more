@@ -1,4 +1,4 @@
-import { EXERCISES, type Session } from "./store.ts";
+import { EXERCISES, type Session } from "./store-core.ts";
 const aliases: Record<string, string> = {
   bench: "Bench press",
   incline: "Incline dumbbell press",

@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "types": ["@cloudflare/workers-types", "node"] },
+  "include": [
+    "worker",
+    "server/store-core.ts",
+    "server/commands.ts",
+    "server/access-core.ts"
+  ]
+}

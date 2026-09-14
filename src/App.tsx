@@ -48,6 +48,7 @@ type State = {
   sessions: Session[];
   exercises: string[];
   voiceConfigured: boolean;
+  hosted?: boolean;
 };
 type Proposal = {
   action: string;
@@ -452,7 +453,7 @@ export default function App() {
         <div className="masthead-right">
           <span className="local-status">
             <span />
-            LOCAL JOURNAL
+            {data.hosted ? "SHARED DEMO" : "LOCAL JOURNAL"}
           </span>
           <button
             className="profile-button"
@@ -932,8 +933,10 @@ export default function App() {
                         )}
                       </form>
                       <div className="save-note">
-                        <ShieldCheck size={13} /> Saved to your local training
-                        journal
+                        <ShieldCheck size={13} />{" "}
+                        {data.hosted
+                          ? "Saved to the shared demo journal"
+                          : "Saved to your local training journal"}
                       </div>
                     </div>
                   </div>
@@ -1555,7 +1558,9 @@ export default function App() {
                   <p>
                     {data.voiceConfigured
                       ? "Your ElevenLabs agent is ready. Sessions automatically end after 60 seconds to conserve your allowance."
-                      : "Add your ElevenLabs API key and agent ID to the local .env file, then restart the app. Your key stays on the server."}
+                      : data.hosted
+                        ? "Voice is temporarily unavailable. You can still log sets manually or use text commands."
+                        : "Add your ElevenLabs API key and agent ID to the local .env file, then restart the app. Your key stays on the server."}
                   </p>
                   <p>
                     You can use Wispr Flow in the quick-log text box right now.
@@ -1567,9 +1572,9 @@ export default function App() {
                     <ShieldCheck size={18} /> Your training stays here
                   </h3>
                   <p>
-                    Workouts are stored in a local SQLite database and survive
-                    refreshes and server restarts. This version is a personal
-                    workspace, without cloud accounts or sync.
+                    {data.hosted
+                      ? "This is a shared portfolio demonstration. Workouts persist online and are visible to anyone with the project password. Please use sample data, not personal information."
+                      : "Workouts are stored in a local SQLite database and survive refreshes and server restarts. This version is a personal workspace, without cloud accounts or sync."}
                   </p>
                   <a className="text-button" href="/api/export" download>
                     <Download size={15} /> Export your workouts

@@ -1,15 +1,32 @@
 import express from "express";
 import { mkdirSync } from "node:fs";
-import { resolve } from "node:path";
+import { resolve, dirname } from "node:path";
+import { installAccess } from "./access.ts";
 import { Store, AppError, EXERCISES } from "./store.ts";
 import { parseCommand } from "./commands.ts";
 import { ZodError } from "zod";
 try {
   process.loadEnvFile(".env");
 } catch {}
-mkdirSync("data", { recursive: true });
-const store = new Store(process.env.DB_PATH || "data/one-more.sqlite");
+const dbPath = process.env.DB_PATH || "data/one-more.sqlite";
+mkdirSync(dirname(dbPath), { recursive: true });
+const store = new Store(dbPath);
 const app = express();
+if (process.env.TRUST_PROXY === "1") app.set("trust proxy", 1);
+if (process.env.RAILWAY_ENVIRONMENT_ID && !process.env.APP_PASSWORD)
+  throw new Error("Hosted deployments require APP_PASSWORD.");
+app.disable("x-powered-by");
+app.get("/healthz", (_req, res) => res.json({ status: "ok" }));
+app.use((req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Referrer-Policy", "same-origin");
+  res.setHeader("X-Frame-Options", "DENY");
+  const origin = req.headers.origin;
+  const expectedOrigin = process.env.APP_ORIGIN || `${req.protocol}://${req.get("host")}`;
+  if (origin && origin !== expectedOrigin) return res.status(403).json({ error: "Cross-origin requests are not allowed." });
+  next();
+});
+installAccess(app, process.env.APP_PASSWORD, process.env.COOKIE_SECURE === "1");
 app.use(express.json({ limit: "32kb" }));
 app.use("/api", (req, res, next) => {
   res.setHeader("Cache-Control", "no-store");

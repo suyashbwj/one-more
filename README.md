@@ -2,7 +2,7 @@
 
 **Less typing. More lifting.** A responsive workout journal with optional voice integration, intentional corrections, and durable local storage.
 
-Built for Suyash's project portfolio. The app is functional locally; ElevenLabs conversation is integrated but requires credentials and an agent configured with the included tool contract.
+Built for Suyash's project portfolio. The app works locally and includes a Cloudflare Workers deployment with persistent SQLite storage. The configured ElevenLabs agent and authenticated connection endpoint have been verified; an end-to-end microphone session still needs testing.
 
 ## Watch the demo
 
@@ -82,7 +82,7 @@ For a phone on the same trusted Wi-Fi network:
 2. Run `npm run dev:lan`.
 3. Open `http://YOUR_MAC_LAN_IP:4317` on the phone. Keep the Mac running.
 
-Manual logging and history work over LAN HTTP. Microphone access generally requires HTTPS on a phone, so live voice needs a trusted HTTPS setup. The LAN mode is a single-user workspace without authentication; use it only on a trusted network. There is no public deployment or cloud sync in this version.
+Manual logging and history work over LAN HTTP. Microphone access generally requires HTTPS on a phone, so live voice needs a trusted HTTPS setup. The LAN mode is a single-user workspace without authentication; use it only on a trusted network. The separate Cloudflare deployment uses a password-protected shared demonstration journal. See [hosting instructions](docs/deployment.md).
 
 The manifest provides home-screen branding. Offline app caching is intentionally not implemented, so a home-screen shortcut still needs the local server.
 
@@ -99,7 +99,7 @@ The manifest provides home-screen branding. Offline app caching is intentionally
 
 This version uses **SQLite**, not PostgreSQL. It preserves transactional guarantees while eliminating database setup for a local demo. Do not claim a PostgreSQL implementation on the résumé until that migration exists. Likewise, describe real ElevenLabs voice as verified only after the credentialed checklist passes.
 
-Next production steps would be accounts and session ownership, PostgreSQL migrations, authenticated hosting, live voice evaluation with gym noise, and real-device microphone testing. This local version is not a multi-user service.
+The hosted portfolio demo uses a password gate and a single shared journal, not separate user accounts. Next production steps include per-user ownership, live voice evaluation with gym noise, real-device microphone testing, and backup/restore operations. [Deployment instructions and verification](docs/deployment.md).
 
 ## Training tools (no API key required)
 

@@ -51,7 +51,7 @@ Restart with `npm run dev`. The voice card now becomes available. The API key is
 
 ## Live verification checklist
 
-These steps need your account and microphone; they have **not** been tested with a real ElevenLabs connection yet.
+The configured agent and signed-URL endpoint were verified on September 14, 2026: authenticated access, 60-second maximum, five calls per day, one concurrent call, bursting disabled, and all three client tools attached. The API key needs ElevenAgents **Write** to issue signed URLs; Read alone returns `missing_permissions`. The following microphone checklist is still pending.
 
 - Start a workout, click Talk to One More, and allow microphone access.
 - Say "Bench press, 135 pounds for eight reps." Verify a proposal appears.

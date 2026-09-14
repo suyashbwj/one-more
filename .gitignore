@@ -9,3 +9,8 @@ data/
 *.sqlite
 *.sqlite-*
 *.log
+
+.wrangler/
+.dev.vars
+.dev.vars.*
+.railway/
