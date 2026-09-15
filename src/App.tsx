@@ -156,6 +156,11 @@ export default function App() {
   const [command, setCommand] = useState("");
   const [proposal, setProposal] = useState<Proposal | null>(null);
   const [reply, setReply] = useState("");
+  const [voiceMessages, setVoiceMessages] = useState<
+    { source: string; message: string }[]
+  >([]);
+  const [voiceNotice, setVoiceNotice] = useState("");
+  const voiceStarting = useRef(false);
   const [tick, setTick] = useState(Date.now());
   const [restEnd, setRestEnd] = useStored<number | null>("rest-end", null);
   const [restPaused, setRestPaused] = useStored<number | null>(
@@ -201,9 +206,18 @@ export default function App() {
     const t = setInterval(() => setTick(Date.now()), 1000);
     const focus = () => refresh();
     window.addEventListener("focus", focus);
+    const visible = () => {
+      if (!document.hidden) refresh();
+    };
+    document.addEventListener("visibilitychange", visible);
+    const sync = setInterval(() => {
+      if (!document.hidden && !lock.current) refresh();
+    }, 15000);
     return () => {
       clearInterval(t);
       window.removeEventListener("focus", focus);
+      document.removeEventListener("visibilitychange", visible);
+      clearInterval(sync);
     };
   }, []);
   useEffect(() => {
@@ -359,10 +373,34 @@ export default function App() {
     return "Save failed. Ask the user to review the on-screen error before retrying.";
   }
   const conversation = useConversation({
-    onError: () =>
+    onConnect: () => {
+      voiceStarting.current = false;
+      setVoiceNotice(
+        "Microphone connected. Say one set, then confirm when asked.",
+      );
+    },
+    onDisconnect: () => {
+      voiceStarting.current = false;
+      setVoiceNotice(
+        "Conversation ended. Any unconfirmed set still needs Save below.",
+      );
+    },
+    onMessage: ({ source, message }) =>
+      setVoiceMessages((previous) => [
+        ...previous.slice(-7),
+        { source, message },
+      ]),
+    onError: (message) => {
+      voiceStarting.current = false;
+      const detail =
+        typeof message === "string" ? message : "Connection failed";
+      setVoiceNotice("Voice could not connect. " + detail);
       setError(
-        "Voice connection interrupted. Your saved sets are safe. You can reconnect or log manually.",
-      ),
+        "Voice: " +
+          detail +
+          ". Your saved sets are safe. You can use the text command below.",
+      );
+    },
   });
   useConversationClientTool("prepare_workout_command", async ({ text }) =>
     typeof text === "string" ? interpret(text) : "A text command is required.",
@@ -372,14 +410,17 @@ export default function App() {
       ? confirmProposal(token)
       : "A confirmation token is required.",
   );
-  useConversationClientTool("get_workout_context", async () =>
-    JSON.stringify({
-      active,
+  useConversationClientTool("get_workout_context", async () => {
+    const latest: State = await api("state");
+    setData(latest);
+    return JSON.stringify({
+      active: latest.sessions.find((s) => !s.endedAt) || null,
       selectedExercise: selected,
       unit,
-      history: completed.slice(0, 3),
-    }),
-  );
+      history: latest.sessions.filter((s) => s.endedAt).slice(0, 3),
+      supportedExercises: latest.exercises,
+    });
+  });
   useEffect(() => {
     if (conversation.status === "connected") {
       const t = setTimeout(() => {
@@ -396,11 +437,22 @@ export default function App() {
       await conversation.endSession();
       return;
     }
-    if (!data.voiceConfigured) {
-      setModal("settings");
-      return;
-    }
+    if (voiceStarting.current || conversation.status === "connecting") return;
+    voiceStarting.current = true;
+    setVoiceNotice("Checking voice and workout…");
     try {
+      const latest: State = await api("state");
+      setData(latest);
+      if (!latest.voiceConfigured)
+        throw new Error("Voice is not configured on the server yet");
+      if (!latest.sessions.some((s) => !s.endedAt)) {
+        setVoiceNotice(
+          "Start a workout using Start session above, then connect your microphone.",
+        );
+        return;
+      }
+      setVoiceMessages([]);
+      setVoiceNotice("Connecting microphone…");
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       stream.getTracks().forEach((t) => t.stop());
       const d = await api("voice/signed-url");
@@ -409,10 +461,13 @@ export default function App() {
         connectionType: "websocket",
       });
     } catch (e) {
-      setError(
+      const message =
         (e as Error).message ||
-          "Microphone unavailable. Check browser permissions.",
-      );
+        "Microphone unavailable. Check browser permissions.";
+      setVoiceNotice(message);
+      setError(message);
+    } finally {
+      voiceStarting.current = false;
     }
   }
   const weekly = completed.filter(
@@ -991,9 +1046,40 @@ export default function App() {
                     </button>
                     <span className="voice-foot">
                       {data.voiceConfigured
-                        ? "ElevenLabs / Connected"
-                        : "ElevenLabs / Not connected"}
+                        ? conversation.status === "connected"
+                          ? "Microphone connected"
+                          : conversation.status === "connecting"
+                            ? "Connecting microphone…"
+                            : "Voice ready · microphone off"
+                        : "Voice setup needs refreshing"}
                     </span>
+                    <p className="voice-guidance">
+                      {!active
+                        ? "1. Start a workout above. 2. Connect your microphone. 3. Say one set and confirm it."
+                        : "Say one set at a time. Nothing is saved until you say yes or press Confirm below."}
+                    </p>
+                    {voiceNotice && (
+                      <p role="status" className="voice-guidance">
+                        {voiceNotice}
+                      </p>
+                    )}
+                    {voiceMessages.length > 0 && (
+                      <div
+                        className="voice-transcript"
+                        role="log"
+                        aria-label="Voice transcript"
+                        aria-live="polite"
+                      >
+                        {voiceMessages.map((m, i) => (
+                          <p key={i}>
+                            <strong>
+                              {m.source === "user" ? "You" : "One More"}:
+                            </strong>{" "}
+                            {m.message}
+                          </p>
+                        ))}
+                      </div>
+                    )}
                     <div className="command-divider">
                       <span>TEXT COMMAND</span>
                     </div>

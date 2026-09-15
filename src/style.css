@@ -2590,3 +2590,22 @@ footer {
     line-height: 1.6;
   }
 }
+
+.voice-guidance {
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 12px 0;
+  color: var(--muted, #666);
+}
+.voice-transcript {
+  max-height: 220px;
+  overflow: auto;
+  border: 1px solid #d9dcd0;
+  padding: 12px;
+  margin: 12px 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.voice-transcript p {
+  margin: 0 0 10px;
+}

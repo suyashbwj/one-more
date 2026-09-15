@@ -31,3 +31,7 @@ Verified September 14, 2026 against the local Workers runtime: unauthenticated d
 ## Optional Node hosting
 
 A Dockerfile and Railway configuration are also included. Use a persistent volume, set `DB_PATH=/data/one-more.sqlite`, `HOST=0.0.0.0`, `APP_PASSWORD`, `COOKIE_SECURE=1`, `TRUST_PROXY=1`, and `APP_ORIGIN` to the exact HTTPS origin. Do not deploy this app to an ephemeral filesystem if workout persistence matters. No Railway project was created for this app.
+
+## Voice usability update
+
+The deployed frontend now refreshes server state before opening the microphone, refreshes visible tabs periodically, distinguishes configured voice from an active microphone, requires an active workout before connecting, and displays live transcript messages and connection feedback. A real ElevenLabs text-mode session successfully called context, prepare, and confirm tools and saved exactly one set in isolated test storage. This validates the agent/tool sequence, but does not substitute for a real microphone test.
